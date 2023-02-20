@@ -1,5 +1,4 @@
 // NOTE: Optimized to be played in replit console. //
-
 console.log(
 	'****************************************************************************************************************** * * * * PREPLE * * * *****************************************************************************************************************'
 );
@@ -29,7 +28,7 @@ setTimeout(() => {
 
 setTimeout(() => {
 	(function index() {
-		// IIFE Function to start gameplay
+		// IIFE Function to start gameplay+
 
 		let guessCount; // guess count incrementor
 		let evaluatedGuess = [];
@@ -54,14 +53,25 @@ setTimeout(() => {
 			'EDGE',
 			'CASE',
 			'WORD',
-		]; // word bank - can improve by adding words dynamically
+			'CALL',
+			'REST',
+			'DATA',
+			'SEND',
+			'RUNS',
+			'SAVE',
+			'TEXT',
+			'CTRL',
+			'HTTP',
+			'VOID',
+			'BOLD',
+			'CAPS',
+		]; // word bank
 
 		const selectRandomWord = (arr) => {
 			// select random word
 			const randomWord = arr[Math.floor(Math.random() * arr.length)];
-			// can improve by removing word from word bank after selection
 			return randomWord;
-			// return arr[0];  // use static value for debugging
+			// return arr[8];  // use static value for debugging
 		};
 
 		class Word {
@@ -81,8 +91,8 @@ setTimeout(() => {
 		/////////// SETUP /////////////
 		///////////////////////////////
 
-		let corrWordStr = selectRandomWord(prepleDatabase); // random word selection
-		const CorrectWord = new Word(selectRandomWord(prepleDatabase));
+		const corrWordStr = selectRandomWord(prepleDatabase); // random word
+		const CorrectWord = new Word(corrWordStr);
 
 		///////////////////////////////
 		////  POSSIBLE OUTCOMES ///////
@@ -97,7 +107,7 @@ setTimeout(() => {
 			charsNotInWord: notInWord,
 			currentTallyMoreThanOne: ` Attempts left:`,
 			currentTallyOneLeft: ` This is your last chance!`,
-			win: ` Nice job! You figured it out.`, // win condition\
+			win: ` Nice job! You figured it out.`, // win condition
 			loss: ` You lost. Better luck next game.`, // loss condition one
 		};
 
@@ -134,7 +144,8 @@ setTimeout(() => {
 				console.log(`You win! ${attemptStr} is the correct word.`);
 				console.log('');
 				assignResetValues();
-				return; // return win
+				// return guessWord(); // return win
+				return;
 			}
 
 			///////////////////////////////
@@ -153,16 +164,25 @@ setTimeout(() => {
 						evaluatedGuess.splice(Number(key), 1, CorrectWord[key]);
 
 						if (wrongPlaces.includes(Attempt[key])) {
-							const idxToPop = wrongPlaces.indexOf(Number(key));
+							// console.log(Attempt[key]);
+
+							const idxToPop = wrongPlaces.indexOf(Attempt[key]);
+
 							wrongPlaces.splice(idxToPop, 1);
 						}
 						// if char was pushed to wrongPlaces arr on a                           previous turn and is NOW guessed in the right place,                    remove from wrongPlaces array
-					} else if (corrWordStr.includes(Attempt[key])) {
+					} else if (
+						corrWordStr.includes(Attempt[key]) &&
+						!evaluatedGuess.includes(Attempt[key])
+					) {
 						//at wrong index
 						if (!wrongPlaces.includes(Attempt[key])) {
 							wrongPlaces.push(Attempt[key]);
 						}
-					} else if (!notInWord.includes(Attempt[key])) {
+					} else if (
+						!notInWord.includes(Attempt[key]) &&
+						!evaluatedGuess.includes(Attempt[key])
+					) {
 						notInWord.push(Attempt[key]);
 					}
 				}
@@ -198,6 +218,7 @@ setTimeout(() => {
 				console.log(phrase.loss + ` The correct word was: ${corrWordStr}`);
 				console.log('');
 				assignResetValues();
+				// return guessWord();
 				return;
 			}
 
